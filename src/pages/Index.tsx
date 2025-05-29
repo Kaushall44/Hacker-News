@@ -49,11 +49,14 @@ const Index = () => {
     : "Top 100 Stories";
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+      {/* Animated background overlay */}
+      <div className="fixed inset-0 bg-gradient-to-tr from-orange-50/20 via-transparent to-blue-50/20 pointer-events-none animate-pulse" />
+      
       <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
-      <main className="max-w-7xl mx-auto px-6 py-12">
-        <div className="mb-8">
+      <main className="relative max-w-7xl mx-auto px-6 py-12">
+        <div className="mb-8 animate-fade-in">
           <h2 className="text-lg font-medium text-gray-900 tracking-tight">
             {isLoading ? "Loading..." : resultsText}
           </h2>
@@ -63,18 +66,26 @@ const Index = () => {
           {isLoading ? (
             // Show skeletons while loading
             Array.from({ length: 12 }).map((_, i) => (
-              <StoryCardSkeleton key={i} />
+              <div key={i} className="animate-fade-in" style={{ animationDelay: `${i * 50}ms` }}>
+                <StoryCardSkeleton />
+              </div>
             ))
           ) : stories.length > 0 ? (
             // Show stories
-            stories.map((story: HNStory) => (
-              <StoryCard key={story.objectID} story={story} />
+            stories.map((story: HNStory, index) => (
+              <div 
+                key={story.objectID} 
+                className="animate-fade-in hover-scale" 
+                style={{ animationDelay: `${index * 30}ms` }}
+              >
+                <StoryCard story={story} />
+              </div>
             ))
           ) : (
             // Show no results message
-            <div className="col-span-full flex flex-col items-center justify-center py-24">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+            <div className="col-span-full flex flex-col items-center justify-center py-24 animate-fade-in">
+              <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-4 animate-pulse">
+                <div className="w-8 h-8 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full"></div>
               </div>
               <p className="text-lg font-medium text-gray-900 mb-1">
                 No stories found
