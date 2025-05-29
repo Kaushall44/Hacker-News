@@ -46,20 +46,20 @@ const Index = () => {
   const stories = data?.hits.filter((story: HNStory) => story.title) || [];
   const resultsText = debouncedQuery 
     ? `${stories.length} results for "${debouncedQuery}"` 
-    : "Top 100 Hacker News Stories";
+    : "Top 100 Stories";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50/50">
       <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <h2 className="text-xl font-medium text-foreground">
-            {isLoading ? "Loading stories..." : resultsText}
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        <div className="mb-8">
+          <h2 className="text-lg font-medium text-gray-900 tracking-tight">
+            {isLoading ? "Loading..." : resultsText}
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {isLoading ? (
             // Show skeletons while loading
             Array.from({ length: 12 }).map((_, i) => (
@@ -72,9 +72,15 @@ const Index = () => {
             ))
           ) : (
             // Show no results message
-            <div className="col-span-full text-center py-12">
-              <p className="text-lg text-muted-foreground">
-                No stories found. Try a different search.
+            <div className="col-span-full flex flex-col items-center justify-center py-24">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+              </div>
+              <p className="text-lg font-medium text-gray-900 mb-1">
+                No stories found
+              </p>
+              <p className="text-gray-500">
+                Try adjusting your search query
               </p>
             </div>
           )}
