@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StoryCard from "@/components/StoryCard";
 import StoryCardSkeleton from "@/components/StoryCardSkeleton";
+import LoadingAnimation from "@/components/LoadingAnimation";
 import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
@@ -64,40 +65,35 @@ const Index = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {isLoading ? (
-            // Show skeletons while loading
-            Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="animate-fade-in" style={{ animationDelay: `${i * 50}ms` }}>
-                <StoryCardSkeleton />
+        {isLoading ? (
+          <LoadingAnimation />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {stories.length > 0 ? (
+              stories.map((story: HNStory, index) => (
+                <div 
+                  key={story.objectID} 
+                  className="animate-fade-in hover-scale" 
+                  style={{ animationDelay: `${index * 30}ms` }}
+                >
+                  <StoryCard story={story} />
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full flex flex-col items-center justify-center py-24 animate-fade-in">
+                <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-4 animate-pulse">
+                  <div className="w-8 h-8 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full"></div>
+                </div>
+                <p className="text-lg font-medium text-gray-900 mb-1">
+                  No stories found
+                </p>
+                <p className="text-gray-500">
+                  Try adjusting your search query
+                </p>
               </div>
-            ))
-          ) : stories.length > 0 ? (
-            // Show stories
-            stories.map((story: HNStory, index) => (
-              <div 
-                key={story.objectID} 
-                className="animate-fade-in hover-scale" 
-                style={{ animationDelay: `${index * 30}ms` }}
-              >
-                <StoryCard story={story} />
-              </div>
-            ))
-          ) : (
-            // Show no results message
-            <div className="col-span-full flex flex-col items-center justify-center py-24 animate-fade-in">
-              <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-4 animate-pulse">
-                <div className="w-8 h-8 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full"></div>
-              </div>
-              <p className="text-lg font-medium text-gray-900 mb-1">
-                No stories found
-              </p>
-              <p className="text-gray-500">
-                Try adjusting your search query
-              </p>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </main>
       
       <Footer />
