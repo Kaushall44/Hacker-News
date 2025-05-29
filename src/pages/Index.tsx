@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTopStories, searchStories, HNStory } from "@/lib/hackernews";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import StoryCard from "@/components/StoryCard";
 import StoryCardSkeleton from "@/components/StoryCardSkeleton";
 import { useToast } from "@/components/ui/use-toast";
@@ -49,9 +49,11 @@ const Index = () => {
     : "Top 100 Stories";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
-      {/* Animated background overlay */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden">
+      {/* Enhanced animated background overlays */}
       <div className="fixed inset-0 bg-gradient-to-tr from-orange-50/20 via-transparent to-blue-50/20 pointer-events-none animate-pulse" />
+      <div className="fixed inset-0 bg-gradient-to-bl from-purple-50/10 via-transparent to-pink-50/15 pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/20 via-transparent to-transparent pointer-events-none" />
       
       <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
@@ -97,6 +99,8 @@ const Index = () => {
           )}
         </div>
       </main>
+      
+      <Footer />
     </div>
   );
 };
