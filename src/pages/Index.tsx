@@ -1,12 +1,13 @@
+
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTopStories, searchStories, HNStory } from "@/lib/hackernews";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StoryCard from "@/components/StoryCard";
-import StoryCardSkeleton from "@/components/StoryCardSkeleton";
 import LoadingAnimation from "@/components/LoadingAnimation";
 import { useToast } from "@/components/ui/use-toast";
+import { Search, TrendingUp } from "lucide-react";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,50 +46,73 @@ const Index = () => {
 
   // Filter out items without title
   const stories = data?.hits.filter((story: HNStory) => story.title) || [];
-  const resultsText = debouncedQuery 
-    ? `${stories.length} results for "${debouncedQuery}"` 
-    : "Top 100 Stories";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden">
-      {/* Enhanced animated background overlays */}
-      <div className="fixed inset-0 bg-gradient-to-tr from-orange-50/20 via-transparent to-blue-50/20 pointer-events-none animate-pulse" />
-      <div className="fixed inset-0 bg-gradient-to-bl from-purple-50/10 via-transparent to-pink-50/15 pointer-events-none" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/20 via-transparent to-transparent pointer-events-none" />
-      
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50/50">
       <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
-      <main className="relative max-w-7xl mx-auto px-6 py-12">
-        <div className="mb-8 animate-fade-in">
-          <h2 className="text-lg font-medium text-gray-900 tracking-tight">
-            {isLoading ? "Loading..." : resultsText}
-          </h2>
+      <main className="mx-auto max-w-7xl px-6 py-8">
+        {/* Modern stats header */}
+        <div className="mb-8 space-y-4 animate-fade-in">
+          <div className="flex items-center gap-3">
+            {debouncedQuery ? (
+              <>
+                <Search className="h-5 w-5 text-orange-500" />
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Search Results
+                </h2>
+              </>
+            ) : (
+              <>
+                <TrendingUp className="h-5 w-5 text-orange-500" />
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Trending Stories
+                </h2>
+              </>
+            )}
+          </div>
+          
+          {!isLoading && (
+            <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-orange-50 rounded-full">
+                <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" />
+                <span className="font-medium text-orange-700">
+                  {stories.length} stories
+                </span>
+              </div>
+              {debouncedQuery && (
+                <span className="text-gray-500">
+                  for "{debouncedQuery}"
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {isLoading ? (
           <LoadingAnimation />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {stories.length > 0 ? (
               stories.map((story: HNStory, index) => (
                 <div 
                   key={story.objectID} 
-                  className="animate-fade-in hover-scale" 
-                  style={{ animationDelay: `${index * 30}ms` }}
+                  className="animate-fade-in" 
+                  style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <StoryCard story={story} />
                 </div>
               ))
             ) : (
-              <div className="col-span-full flex flex-col items-center justify-center py-24 animate-fade-in">
-                <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-4 animate-pulse">
-                  <div className="w-8 h-8 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full"></div>
+              <div className="col-span-full flex flex-col items-center justify-center py-32 animate-fade-in">
+                <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                  <Search className="w-8 h-8 text-gray-400" />
                 </div>
-                <p className="text-lg font-medium text-gray-900 mb-1">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   No stories found
-                </p>
-                <p className="text-gray-500">
-                  Try adjusting your search query
+                </h3>
+                <p className="text-gray-500 text-center max-w-md">
+                  Try adjusting your search terms or check back later for new stories.
                 </p>
               </div>
             )}
